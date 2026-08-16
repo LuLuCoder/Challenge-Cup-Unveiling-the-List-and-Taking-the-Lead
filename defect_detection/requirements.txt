@@ -1,0 +1,9 @@
+ultralytics
+opencv-python
+numpy
+pandas
+matplotlib
+PyYAML
+tqdm
+# 可选：从 Roboflow 自动下载论文数据时使用
+# roboflow
