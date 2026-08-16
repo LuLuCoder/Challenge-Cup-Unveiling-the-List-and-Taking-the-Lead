@@ -5,7 +5,7 @@
 闭环，覆盖打印前（设计/规划）、打印中（工艺参数）、打印后/过程中（质量检测）
 三个环节。
 
-本仓库包含四个工程：
+本仓库包含三个功能模块、一个统一主界面，以及 ANSYS 仿真工程与示例数据：
 
 | 文件夹                 | 模块                      | 作用                                    |
 | ---------------------- | ------------------------- | --------------------------------------- |
@@ -13,6 +13,8 @@
 | `satc_optimizer`     | ② SATC-NSGA-II 参数优化  | 代理模型 + Pareto 推荐打印参数          |
 | `defect_detection`   | ③ 在线缺陷识别           | YOLOv8 逐层视觉缺陷检测闭环             |
 | `am_platform`        | 统一主界面                | 将 ①② 整合进同一窗口（③ 可扩展接入） |
+| `ansys`              | ANSYS Workbench 工程     | 本赛题零件的力学仿真工程（analyse.wbpj） |
+| `data`               | 示例数据                 | 节点坐标 + 六应力分量，可直接导入 ①②  |
 
 ---
 
@@ -123,6 +125,15 @@ python main.py        # 或双击 run.bat
 
 ### 3.1 ANSYS 仿真文件（路径规划 / 自动权重共用）
 
+仓库已附带一套可直接运行的示例数据：
+
+- `ansys/`：ANSYS Workbench 仿真工程（`analyse.wbpj`），对应赛题零件的静力学分析；
+- `data/`：从该工程导出的数据——`node_coordinates.csv`（节点坐标）
+  与 `X.txt / Y.txt / Z.txt / XY.txt / YZ.txt / XZ.txt`（六应力分量），
+  在路径规划或参数优化界面中一次多选即可导入。
+
+文件格式约定：
+
 - **节点坐标文件**：`Node, X, Y, Z`（CSV/TXT，兼容 ANSYS 导出异常格式）；
 - **六应力分量文件**：`X.txt / Y.txt / Z.txt / XY.txt / YZ.txt / XZ.txt`
   （节点号 + 数值，文件名不区分大小写）；
@@ -166,6 +177,8 @@ pip install numpy pandas matplotlib scipy scikit-learn ultralytics opencv-python
 ```text
 Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead/
 ├── README.md                     # 本文件（系统总览）
+├── ansys/                        # ANSYS Workbench 仿真工程（analyse.wbpj）
+├── data/                         # 示例 ANSYS 数据（节点坐标 + 六应力分量）
 ├── ansys_path_planner/           # ① 路径规划
 │   ├── main.py
 │   ├── path_planner/
