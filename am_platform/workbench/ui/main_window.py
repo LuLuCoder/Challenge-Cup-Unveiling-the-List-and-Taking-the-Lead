@@ -2,7 +2,7 @@
 
 import importlib
 import tkinter as tk
-from tkinter import ttk
+from tkinter import messagebox, ttk
 
 from workbench.ui.embed import EmbeddableRoot
 
@@ -15,6 +15,7 @@ WINDOW_GEOMETRY = "1680x1000"
 MODULES = [
     ("① ANSYS 仿真驱动路径规划", "path_planner.ui.main_window", "ANSYSPathPlannerApp"),
     ("② SATC 参数优化", "satc.ui.main_window", "SATCOptimizerApp"),
+    ("③ 相似零件模板映射", "path_planner.ui.template_window", "TemplateApp"),
 ]
 
 
@@ -75,9 +76,15 @@ class MainWindow:
     def _add_module_tab(self, label, module, cls_name):
         container = EmbeddableRoot(self.notebook)
         self.notebook.add(container, text=label)
-
-        app_class = self._load_app_class(module, cls_name)
-        app = app_class(container)
+        try:
+            app_class = self._load_app_class(module, cls_name)
+            app = app_class(container)
+        except Exception as e:
+            messagebox.showerror(
+                "模块加载失败",
+                f"「{label}」无法启动：\n{repr(e)}",
+            )
+            return
         self._apps.append(app)
         self._app_labels[app] = label
 
@@ -101,7 +108,10 @@ class MainWindow:
         for other in self._apps:
             if other in self._busy_apps:
                 continue
-            for attr in ("import_button", "plan_button", "run_button"):
+            for attr in (
+                "import_button", "plan_button", "run_button",
+                "process_button", "save_button", "library_button",
+            ):
                 btn = getattr(other, attr, None)
                 if btn is not None:
                     btn.config(state="disabled" if any_busy else "normal")

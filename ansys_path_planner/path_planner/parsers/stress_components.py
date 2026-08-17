@@ -1,4 +1,5 @@
 """ANSYS 六个应力分量文件夹导入。"""
+import warnings
 from pathlib import Path
 
 import pandas as pd
@@ -8,12 +9,44 @@ from path_planner.utils.numeric import numeric_tokens
 from path_planner.utils.text import read_text_auto
 
 
+def _try_fast_parse(path):
+    """pandas C 引擎快速路径；失败（格式异常）返回 None 交给旧解析器。"""
+    raw = None
+    for kwargs in ({"engine": "c"}, {"delim_whitespace": True, "engine": "c"}):
+        try:
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", FutureWarning)
+                candidate = pd.read_csv(path, header=None, **kwargs)
+        except Exception:
+            continue
+        if candidate is not None and candidate.shape[1] >= 2:
+            raw = candidate
+            break
+    if raw is None:
+        return None
+
+    nums = raw.iloc[:, :2].apply(pd.to_numeric, errors="coerce")
+    nums = nums.dropna()
+    if len(nums) == 0:
+        return None
+
+    df = nums.copy()
+    df.columns = ["Node", "Value"]
+    df["Node"] = df["Node"].astype(int)
+    df = df.drop_duplicates(subset=["Node"], keep="last")
+    return df.sort_values("Node").reset_index(drop=True)
+
+
 def parse_ansys_stress_component(path):
     """
     解析 ANSYS 单个应力分量文件（Node Number + 数值）。
 
     实际分量由文件名决定（见 config.STRESS_FILE_MAP），而不是由表头决定。
     """
+    fast = _try_fast_parse(path)
+    if fast is not None:
+        return fast
+
     text = read_text_auto(path)
     rows = []
 

@@ -1,0 +1,366 @@
+
+ Ansys Mechanical Enterprise                       
+
+
+ *------------------------------------------------------------------*
+ |                                                                  |
+ |   W E L C O M E   T O   T H E   A N S Y S (R)  P R O G R A M     |
+ |                                                                  |
+ *------------------------------------------------------------------*
+
+
+
+
+ ***************************************************************
+ *            ANSYS 2022 R1          LEGAL NOTICES             *
+ ***************************************************************
+ *                                                             *
+ * Copyright 1971-2022 ANSYS, Inc.  All rights reserved.       *
+ * Unauthorized use, distribution or duplication is            *
+ * prohibited.                                                 *
+ *                                                             *
+ * Ansys is a registered trademark of ANSYS, Inc. or its       *
+ * subsidiaries in the United States or other countries.       *
+ * See the ANSYS, Inc. online documentation or the ANSYS, Inc. *
+ * documentation CD or online help for the complete Legal      *
+ * Notice.                                                     *
+ *                                                             *
+ ***************************************************************
+ *                                                             *
+ * THIS ANSYS SOFTWARE PRODUCT AND PROGRAM DOCUMENTATION       *
+ * INCLUDE TRADE SECRETS AND CONFIDENTIAL AND PROPRIETARY      *
+ * PRODUCTS OF ANSYS, INC., ITS SUBSIDIARIES, OR LICENSORS.    *
+ * The software products and documentation are furnished by    *
+ * ANSYS, Inc. or its subsidiaries under a software license    *
+ * agreement that contains provisions concerning               *
+ * non-disclosure, copying, length and nature of use,          *
+ * compliance with exporting laws, warranties, disclaimers,    *
+ * limitations of liability, and remedies, and other           *
+ * provisions.  The software products and documentation may be *
+ * used, disclosed, transferred, or copied only in accordance  *
+ * with the terms and conditions of that software license      *
+ * agreement.                                                  *
+ *                                                             *
+ * ANSYS, Inc. is a UL registered                              *
+ * ISO 9001:2015 company.                                      *
+ *                                                             *
+ ***************************************************************
+ *                                                             *
+ * This product is subject to U.S. laws governing export and   *
+ * re-export.                                                  *
+ *                                                             *
+ * For U.S. Government users, except as specifically granted   *
+ * by the ANSYS, Inc. software license agreement, the use,     *
+ * duplication, or disclosure by the United States Government  *
+ * is subject to restrictions stated in the ANSYS, Inc.        *
+ * software license agreement and FAR 12.212 (for non-DOD      *
+ * licenses).                                                  *
+ *                                                             *
+ ***************************************************************
+
+ 2022 R1 
+     
+ Point Releases and Patches installed:   
+     
+ ANSYS, Inc. License Manager 2022 R1 
+ Discovery 2022 R1   
+ SpaceClaim 2022 R1  
+ Ansys Sherlock 2022 R1  
+ Autodyn 2022 R1 
+ LS-DYNA 2022 R1 
+ CFX (includes CFD-Post) 2022 R1 
+ Chemkin 2022 R1 
+ EnSight 2022 R1 
+ FENSAP-ICE 2022 R1  
+ Fluent (includes CFD-Post) 2022 R1  
+ Polyflow (includes CFD-Post) 2022 R1
+ Forte (includes EnSight) 2022 R1
+ TurboGrid 2022 R1   
+ ICEM CFD 2022 R1
+ Aqwa 2022 R1
+ Speos 2022 R1   
+ Additive 2022 R1
+ Mechanical Products 2022 R1 
+ Icepak (includes CFD-Post) 2022 R1  
+ ACIS Geometry Interface 2022 R1 
+ AutoCAD Geometry Interface 2022 R1  
+ Catia, Version 4 Geometry Interface 2022 R1 
+ Catia, Version 5 Geometry Interface 2022 R1 
+ Catia, Version 6 Geometry Interface 2022 R1 
+ Creo Elements/Direct Modeling Geometry Interface 2022 R1
+ Creo Parametric Geometry Interface 2022 R1  
+ Inventor Geometry Interface 2022 R1 
+ JTOpen Geometry Interface 2022 R1   
+ NX Geometry Interface 2022 R1   
+ Parasolid Geometry Interface  2022 R1   
+ Solid Edge Geometry Interface 2022 R1   
+ SOLIDWORKS Geometry Interface 2022 R1   
+ CFD-Post only 2022 R1   
+ Speos HPC 2022 R1   
+ Speos for Creo Parametric 2022 R1   
+ Customization Files for User Programmable Features 2022 R1  
+ Remote Solve Manager Standalone Services 2022 R1
+ Ansys Sound - SAS 2022 R1   
+ Viewer 2022 R1  
+
+
+          *****  ANSYS COMMAND LINE ARGUMENTS  *****
+  BATCH MODE REQUESTED (-b)    = NOLIST
+  INPUT FILE COPY MODE (-c)    = COPY
+  DISTRIBUTED MEMORY PARALLEL REQUESTED
+       6 PARALLEL PROCESSES REQUESTED WITH SINGLE THREAD PER PROCESS
+    TOTAL OF     6 CORES REQUESTED
+  INPUT FILE NAME              = D:\University\竞赛与项目\Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead\ansys\_ProjectScratch\ScrDB1F\dummy.dat
+  OUTPUT FILE NAME             = D:\University\竞赛与项目\Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead\ansys\_ProjectScratch\ScrDB1F\post.out
+  START-UP FILE MODE           = NOREAD
+  STOP FILE MODE               = NOREAD
+  GPU ACCELERATOR OPTION REQUESTED
+     1 GPU ACCELERATOR DEVICES REQUESTED
+
+ RELEASE= 2022 R1              BUILD= 22.1      UP20211129   VERSION=WINDOWS x64 
+ CURRENT JOBNAME=file0  14:40:00  AUG 17, 2026 CP=      0.688
+
+
+ *** NOTE ***                            CP =       0.781   TIME= 14:40:00
+ The use of the ANSGPU_OVERRIDE environment variable has been detected.  
+ Please ensure that the GPU accelerator device(s) being used for this    
+ simulation is sufficiently powerful to accelerate the simulation.       
+
+ PARAMETER _DS_PROGRESS =     999.0000000    
+
+ /INPUT FILE= post.dat  LINE=       0
+
+
+
+ *** NOTE ***                            CP =       2.281   TIME= 14:40:02
+ The /CONFIG,NOELDB command is not valid in a Distributed ANSYS          
+ solution.  Command is ignored.                                          
+
+ *GET  _WALLSTRT  FROM  ACTI  ITEM=TIME WALL  VALUE=  14.6672222    
+
+ SET PARAMETER DIMENSIONS ON  _WB_PROJECTSCRATCH_DIR
+  TYPE=STRI  DIMENSIONS=      248        1        1
+
+ PARAMETER _WB_PROJECTSCRATCH_DIR(1) = D:\University\竞赛与项目\Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead\ansys\_ProjectScratch\ScrDB1F\
+
+ SET PARAMETER DIMENSIONS ON  _WB_SOLVERFILES_DIR
+  TYPE=STRI  DIMENSIONS=      248        1        1
+
+ PARAMETER _WB_SOLVERFILES_DIR(1) = D:\University\竞赛与项目\Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead\ansys\analyse_files\dp0\SYS-1\MECH\
+
+ SET PARAMETER DIMENSIONS ON  _WB_USERFILES_DIR
+  TYPE=STRI  DIMENSIONS=      248        1        1
+
+ PARAMETER _WB_USERFILES_DIR(1) = D:\University\竞赛与项目\Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead\ansys\analyse_files\user_files\
+
+ PARAMETER _WB_POST_RUN =     1.000000000    
+
+ *** ANSYS - ENGINEERING ANALYSIS SYSTEM  RELEASE 2022 R1          22.1     ***
+ DISTRIBUTED Ansys Mechanical Enterprise                       
+
+ 00000000  VERSION=WINDOWS x64   14:40:02  AUG 17, 2026 CP=      2.297
+
+                                                                               
+
+
+
+          ***** ANSYS RESULTS INTERPRETATION (POST1) *****
+
+ *** NOTE ***                            CP =       2.297   TIME= 14:40:02
+ Reading results into the database (SET command) will update the current 
+ displacement and force boundary conditions in the database with the     
+ values from the results file for that load set.  Note that any          
+ subsequent solutions will use these values unless action is taken to    
+ either SAVE the current values or not overwrite them (/EXIT,NOSAVE).    
+ You have already entered the general postprocessor (POST1).             
+
+
+ USE LAST SUBSTEP ON RESULT FILE  FOR LOAD CASE 0 
+
+  *****  geometry obtained from result file  *****
+
+ title(1)=analyse--Static Structural (B5)                                     
+ title(2)=                                                                    
+ Maximum Element Type     =           2
+ Maximum Real Constant Set=           0
+ Maximum Coordinate System=          12
+ Maximum Node Number      =      138265
+ Maximum Element Number   =      110361
+ Maximum Material Number  =           1
+
+ SET COMMAND GOT LOAD STEP=     1  SUBSTEP=     1  CUMULATIVE ITERATION=     1
+   TIME/FREQUENCY=  1.0000    
+ TITLE= analyse--Static Structural (B5)                                         
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ OPENED FILE= D:\University\竞赛与项目\Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead\data\node_coordinates_s.csv FOR COMMAND FILE DATA 
+
+
+ *GET  NCOUNT    FROM  NODE  ITEM=COUN       VALUE=  138265.000     
+
+ *DO LOOP ON PARAMETER= I FROM  1.0000     TO 0.13826E+06 BY  1.0000    
+
+ *GET  NID       FROM  NODE  ITEM=NUM  MIN   VALUE=  1.00000000     
+
+ *GET  XVAL      FROM  NODE         1  ITEM=LOC  X     VALUE=-0.273205081E-001
+
+ *GET  YVAL      FROM  NODE         1  ITEM=LOC  Y     VALUE=-0.100000000E-001
+
+ *GET  ZVAL      FROM  NODE         1  ITEM=LOC  Z     VALUE= 0.207424299E-002
+
+ UNSELECT     FOR ITEM=NODE COMPONENT=    
+  IN RANGE         1 TO          1 STEP          1
+
+     138264  NODES (OF     138265  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ *ENDDO  INDEX= I                               
+
+  COMMAND FILE CLOSED 
+
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ Set Encoding of XML File to:ISO-8859-1
+
+ Set Output of XML File to:
+     PARM,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,
+         ,     ,     ,     ,     ,     ,     ,
+
+ DATABASE WRITTEN ON FILE  parm.xml                                                                                                                                                                                                                                                            
+
+ EXIT THE ANSYS POST1 DATABASE PROCESSOR
+
+
+ ***** ROUTINE COMPLETED *****  CP =        12.344
+
+
+
+ PRINTOUT RESUMED BY /GOP
+
+ *GET  _WALLDONE  FROM  ACTI  ITEM=TIME WALL  VALUE=  14.6700000    
+
+ PARAMETER _TOTALTIM =     10.00000000    
+
+ *GET  _DLBRATIO  FROM  ACTI  ITEM=SOLU DLBR  VALUE=  0.00000000    
+
+ *GET  _COMBTIME  FROM  ACTI  ITEM=SOLU COMB  VALUE=  0.00000000    
+
+ *GET  _SSMODE   FROM  ACTI  ITEM=SOLU SSMM  VALUE=  0.00000000    
+
+ *GET  _NDOFS    FROM  ACTI  ITEM=SOLU NDOF  VALUE=  0.00000000    
+
+ *GET  _SOL_END_TIME  FROM  ACTI  ITEM=SET  TIME  VALUE=  1.00000000    
+
+ *IF  _sol_end_time                     ( =   1.00000     )  EQ  
+      1.000000                          ( =   1.00000     )  THEN    
+
+ /FCLEAN COMMAND REMOVING ALL LOCAL FILES
+
+ *ENDIF
+ --- Total number of nodes = %_numnode%
+ --- Total number of elements = %_numelem%
+ --- Element load balance ratio = 0
+ --- Time to combine distributed files = 0
+ --- Sparse memory mode = 0
+ --- Number of DOF = 0
+
+ EXIT ANSYS WITHOUT SAVING DATABASE
+
+
+ NUMBER OF WARNING MESSAGES ENCOUNTERED=          0
+ NUMBER OF ERROR   MESSAGES ENCOUNTERED=          0
+
++--------- D I S T R I B U T E D   A N S Y S   S T A T I S T I C S ------------+
+
+Release: 2022 R1            Build: 22.1       Update: UP20211129   Platform: WINDOWS x64 
+Date Run: 08/17/2026   Time: 14:40     Process ID: 33364
+Operating System: Windows 10  (Build: 26200)
+
+Processor Model: 13th Gen Intel(R) Core(TM) i7-13650HX
+
+Compiler: Intel(R) Fortran Compiler Version 19.0.5  (Build: 20190815)
+          Intel(R) C/C++ Compiler Version 19.0.5  (Build: 20190815)
+          Intel(R) Math Kernel Library Version 2020.0.0 Product Build 20191125
+          BLAS Library supplied by Intel(R) MKL
+
+Number of machines requested            :    1
+Total number of cores available         :   20
+Number of physical cores available      :   14
+Number of processes requested           :    6
+Number of threads per process requested :    1
+Total number of cores requested         :    6 (Distributed Memory Parallel)               
+MPI Type: INTELMPI
+MPI Version: Intel(R) MPI Library 2019 Update 10 for Windows* OS
+
+
+Number of GPUs requested                :    1
+GPU Acceleration: NVIDIA Library Requested and Enabled
+GPU Device with ID =  0 is: NVIDIA GeForce RTX 4060 Laptop GPU
+GPU Driver Version: 12.70
+CUDA Version: 11.0
+
+Job Name: file0
+Input File: dummy.dat
+
+  Core                Machine Name   Working Directory
+ -----------------------------------------------------
+     0                        lulu   D:\University\竞赛与项目\Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead\ansys\_ProjectScratch\ScrDB1F
+     1                        lulu   D:\University\竞赛与项目\Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead\ansys\_ProjectScratch\ScrDB1F
+     2                        lulu   D:\University\竞赛与项目\Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead\ansys\_ProjectScratch\ScrDB1F
+     3                        lulu   D:\University\竞赛与项目\Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead\ansys\_ProjectScratch\ScrDB1F
+     4                        lulu   D:\University\竞赛与项目\Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead\ansys\_ProjectScratch\ScrDB1F
+     5                        lulu   D:\University\竞赛与项目\Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead\ansys\_ProjectScratch\ScrDB1F
+ 
+Latency time from master to core     1 =    2.065 microseconds
+Latency time from master to core     2 =    2.034 microseconds
+Latency time from master to core     3 =    1.962 microseconds
+Latency time from master to core     4 =    7.538 microseconds
+Latency time from master to core     5 =    3.093 microseconds
+ 
+Communication speed from master to core     1 =  8434.01 MB/sec
+Communication speed from master to core     2 = 10742.29 MB/sec
+Communication speed from master to core     3 = 10752.40 MB/sec
+Communication speed from master to core     4 =  7936.11 MB/sec
+Communication speed from master to core     5 =  7961.94 MB/sec
+
+Total CPU time for main thread                    :       12.0 seconds
+Total CPU time summed for all threads             :       13.7 seconds
+
+Elapsed time spent obtaining a license            :        1.2 seconds
+Elapsed time spent pre-processing model (/PREP7)  :        0.0 seconds
+Elapsed time spent solution - preprocessing       :        0.0 seconds
+Elapsed time spent computing solution             :        0.0 seconds
+Elapsed time spent solution - postprocessing      :        0.0 seconds
+Elapsed time spent post-processing model (/POST1) :        9.6 seconds
+ 
+
+Sum of memory used on all processes               :      235.0 MB
+Sum of memory allocated on all processes          :     7232.0 MB
+Physical memory available                         :         16 GB
+
+Total amount of I/O written to disk               :        0.0 GB
+Total amount of I/O read from disk                :        0.1 GB
+
++------ E N D   D I S T R I B U T E D   A N S Y S   S T A T I S T I C S -------+
+
+
+ *---------------------------------------------------------------------------*
+ |                                                                           |
+ |                       DISTRIBUTED ANSYS RUN COMPLETED                     |
+ |                                                                           |
+ |---------------------------------------------------------------------------|
+ |                                                                           |
+ | Ansys 2022 R1               Build 22.1         UP20211129     WINDOWS x64 |
+ |                                                                           |
+ |---------------------------------------------------------------------------|
+ |                                                                           |
+ | Database Requested(-db)  1024 MB    Scratch Memory Requested      1024 MB |
+ | Maximum Database Used     181 MB    Maximum Scratch Memory Used     29 MB |
+ |                                                                           |
+ |---------------------------------------------------------------------------|
+ |                                                                           |
+ |        CP Time      (sec) =         13.672       Time  =  14:40:12        |
+ |        Elapsed Time (sec) =         15.000       Date  =  08/17/2026      |
+ |                                                                           |
+ *---------------------------------------------------------------------------*

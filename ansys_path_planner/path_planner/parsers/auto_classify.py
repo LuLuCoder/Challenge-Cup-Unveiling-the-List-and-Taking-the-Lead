@@ -31,8 +31,21 @@ def _component_from_filename(path):
 
 
 def _first_numeric_line(path):
-    """返回文件中第一条含至少两个数字的行（用于内容识别）。"""
-    text = read_text_auto(path)
+    """返回文件头中第一条含至少两个数字的行（用于内容识别）。
+
+    只读文件头部（8 KB），避免对超大文件做整读，加快导入。
+    """
+    with open(path, "rb") as f:
+        head = f.read(8192)
+    text = None
+    for enc in ("utf-8-sig", "utf-8", "gb18030", "latin1"):
+        try:
+            text = head.decode(enc)
+            break
+        except (UnicodeDecodeError, LookupError):
+            continue
+    if text is None:
+        text = head.decode("latin1", errors="replace")
     for line in text.splitlines():
         line = line.strip()
         if not line:
@@ -43,13 +56,16 @@ def _first_numeric_line(path):
     return []
 
 
-def classify_ansys_files(paths):
+def classify_ansys_files(paths, require_stress=True):
     """
     把一次多选的文件自动分类。
 
     - 按文件名识别六个应力分量（大小写、扩展名、首尾空格均兼容）；
     - 按内容识别节点坐标（一行 >= 4 个数字）；
     - 仅有两个数字的文件（如变形结果）对路径规划无用，忽略并返回提示。
+
+    require_stress=False 时（相似零件模板映射场景），允许只提供节点坐标文件，
+    缺失的应力分量不再报错，由调用方决定是否走模板映射。
 
     返回：
         node_path    节点坐标文件路径
@@ -87,7 +103,7 @@ def classify_ansys_files(paths):
         comp for comp in config.STRESS_COMPONENTS
         if comp not in stress_files
     ]
-    if missing:
+    if missing and require_stress:
         raise ValueError(
             "缺少应力分量文件：\n"
             + "\n".join(missing)

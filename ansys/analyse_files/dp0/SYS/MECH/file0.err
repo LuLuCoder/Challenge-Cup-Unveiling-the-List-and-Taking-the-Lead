@@ -1,33 +1,10 @@
-/COM,ANSYS RELEASE 2022 R1           BUILD 22.1      UP20211129       09:52:30
+/COM,ANSYS RELEASE 2022 R1           BUILD 22.1      UP20211129       14:40:38
 
- *** WARNING ***                         CP =       3.453   TIME= 09:52:36
+ *** WARNING ***                         CP =       2.859   TIME= 14:40:42
  Element shape checking is currently inactive.  Issue SHPP,ON or         
  SHPP,WARN to reactivate, if desired.                                    
 
- *** WARNING ***                         CP =       3.547   TIME= 09:52:36
- Material number 2 (used by element 1559) should normally have at least  
+ *** WARNING ***                         CP =       3.047   TIME= 14:40:42
+ Material number 2 (used by element 20178) should normally have at least 
  one MP or one TB type command associated with it.  Output of energy by  
  material may not be available.                                          
-
- *** WARNING ***                         CP =       4.500   TIME= 09:52:36
- The Distributed Sparse Matrix Solver was not able to sufficiently       
- utilize the GPU accelerator device(s) during this equation solution.    
- This can be caused by one or more factors such as: the size of the      
- system of equations being solved; using older or less powerful GPU      
- hardware relative to the CPU core(s) involved; having insufficient      
- available memory on the GPU device.  The check for GPU performance      
- terminates for the remainder of this session.                           
-/COM,ANSYS RELEASE 2022 R1           BUILD 22.1      UP20211129       10:00:01
-/COM,ANSYS RELEASE 2022 R1           BUILD 22.1      UP20211129       10:03:52
-
- *** ERROR ***                           CP =       2.609   TIME= 10:03:56
- Unknown label in field 5 ( EXIST ) of *GET command.                     
-  Line= *GET,NEXIST,NODE,I,EXIST                                         
-  The *GET command is ignored.                                           
-/COM,ANSYS RELEASE 2022 R1           BUILD 22.1      UP20211129       10:04:32
-
- *** ERROR ***                           CP =       2.266   TIME= 10:04:36
- Unknown label in field 5 ( EXIST ) of *GET command.                     
-  Line= *GET,NEXIST,NODE,I,EXIST                                         
-  The *GET command is ignored.                                           
-/COM,ANSYS RELEASE 2022 R1           BUILD 22.1      UP20211129       10:06:43

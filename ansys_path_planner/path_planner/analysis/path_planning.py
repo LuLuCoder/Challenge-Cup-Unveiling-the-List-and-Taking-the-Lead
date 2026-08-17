@@ -450,7 +450,9 @@ class LayerPathPlanner:
         )
         for t in np.linspace(0.0, 1.0, n_samples):
             point = a_pt + t * delta
-            if not self.tree.query_ball_point(point, check_radius):
+            # 最近节点距离 > 检测半径 => 该处没有零件实体
+            nearest_dist, _ = self.tree.query(point, k=1)
+            if nearest_dist > check_radius:
                 return False
         return True
 
@@ -492,12 +494,52 @@ class LayerPathPlanner:
         #   空区断开    —— 穿越无节点区域的段，不参与打印路径
         # 子路径按空区断开切分，实体内低应力区域仍全部保留
         layers_arr = np.asarray(layer_numbers, dtype=int)
+
+        # 批量空区判定：把全部路径段的采样点收集起来，一次 KD 查询
+        # （避免逐段 query，极大节点数时快一个数量级）
+        check_radius = max(
+            self.characteristic * config.VOID_CHECK_RADIUS_RATIO,
+            self.d_max,
+            self.typical_spacing * config.VOID_CHECK_SPACING_MULTIPLIER,
+        )
+        n = len(path_indices)
+        seg_max = np.zeros(n, dtype=float)
+        buffer_pts = []
+        buffer_ids = []
+
+        def _flush_buffer():
+            if not buffer_pts:
+                return
+            pts = np.concatenate(buffer_pts)
+            ids = np.asarray(buffer_ids, dtype=int)
+            dists, _ = self.tree.query(pts, k=1)
+            np.maximum.at(seg_max, ids, dists)
+            buffer_pts.clear()
+            buffer_ids.clear()
+
+        for i in range(1, n):
+            a_pt = self.points[path_indices[i - 1]]
+            b_pt = self.points[path_indices[i]]
+            delta = b_pt - a_pt
+            dist = float(np.linalg.norm(delta))
+            if dist < 1e-12:
+                continue  # 零长段视为受支撑
+            n_samples = config.VOID_SAMPLE_MIN + int(
+                np.ceil(dist / max(check_radius, 1e-12))
+            )
+            ts = np.linspace(0.0, 1.0, n_samples)
+            buffer_pts.append(a_pt + np.outer(ts, delta))
+            buffer_ids.extend([i] * n_samples)
+            if len(buffer_ids) >= 20000:
+                _flush_buffer()
+        _flush_buffer()
+
+        supported = seg_max <= check_radius
+
         seg_type = ["起点"]
         sub_path = [1]
-        for i in range(1, len(path_indices)):
-            if not self._segment_supported(
-                path_indices[i - 1], path_indices[i]
-            ):
+        for i in range(1, n):
+            if not supported[i]:
                 seg_type.append("空区断开")
                 sub_path.append(sub_path[-1] + 1)
             elif layers_arr[i] != layers_arr[i - 1]:

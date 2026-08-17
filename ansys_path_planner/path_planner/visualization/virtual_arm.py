@@ -1,67 +1,79 @@
-"""虚拟机械臂：2 连杆平面运动学，末端可精确到达目标点。"""
+"""虚拟机械臂：6 自由度关节臂运动学，工具末端精确到达目标点。
+
+关节配置（演示用）：
+    θ1 基座回转（绕 Z）
+    θ2 肩部俯仰
+    θ3 肘部俯仰
+    θ4 腕部俯仰（使工具保持竖直向下，保证末端贴合路径）
+    θ5 腕部偏摆（演示角，恒 0）
+    θ6 工具回转（演示角，恒 0）
+"""
 import math
 
 import numpy as np
 
-L1 = 0.18  # 肩部立柱高度
-L2 = 0.28  # 大臂长度
-L3 = 0.28  # 小臂长度
-MIN_REACH = abs(L2 - L3)   # 0.03，最内可达半径
-MAX_REACH = L2 + L3        # 0.27，最大伸展长度
+H0 = 0.26   # 肩部立柱高度
+L1 = 0.40   # 大臂长度
+L2 = 0.36   # 小臂长度
+L3 = 0.10   # 腕部长度
+L4 = 0.14   # 工具长度
+TOOL_LEN = L3 + L4           # 工具总长（腕心到末端）
+MIN_REACH = abs(L1 - L2) + 1e-6
+MAX_REACH = L1 + L2 - 1e-6
 
 
 def solve_virtual_arm(target):
-    """
-    2 连杆逆解（肘部向上），保证末端精确到达 target。
+    """6 自由度逆解，保证工具末端精确到达 target。
 
-    q1 决定方位角；q2/q3 决定竖直平面内肩/肘角；
-    q4~q6 仅作为演示姿态角，不影响末端位置。
+    工具竖直向下，腕心 = target + TOOL_LEN 向上；平面内按大臂/小臂
+    两连杆余弦定理解肩/肘角，腕部角度补足使工具竖直。
     """
     x, y, z = (float(v) for v in target)
 
-    q1 = math.atan2(y, x)
+    # 腕心（工具竖直向下，末端 = 腕心 - TOOL_LEN 沿 Z）
+    wx, wy, wz = x, y, z + TOOL_LEN
 
-    r = math.hypot(x, y)
-    zr = z - L1
+    q1 = math.atan2(wy, wx)
+    r = math.hypot(wx, wy)
+    zr = wz - H0
     d = math.hypot(r, zr)
+    d = min(max(d, MIN_REACH), MAX_REACH)
 
-    # 超出可达范围时收回到边界，保证数值稳定
-    d = min(max(d, MIN_REACH * 1.02), MAX_REACH * 0.98)
+    # 余弦定理：肩部夹角 / 肘部内角
+    cos_b = (L1 * L1 + d * d - L2 * L2) / (2.0 * L1 * d)
+    b = math.acos(min(max(cos_b, -1.0), 1.0))
+    cos_e = (L1 * L1 + L2 * L2 - d * d) / (2.0 * L1 * L2)
+    e = math.acos(min(max(cos_e, -1.0), 1.0))
 
-    # 余弦定理求肘部角（取正根，肘部向上）
-    cos_q3 = (d * d - L2 * L2 - L3 * L3) / (2.0 * L2 * L3)
-    cos_q3 = min(max(cos_q3, -1.0), 1.0)
-    q3 = math.acos(cos_q3)
+    a = math.atan2(r, zr)      # 肩→腕心方向（相对竖直）
+    q2 = a - b                 # 大臂方向
+    q3 = math.pi - e           # 肘部弯折
+    q4 = math.pi - (q2 + q3)   # 腕部俯仰：工具竖直向下
 
-    # 肩部角：目标方向角 - 大臂与目标方向之间的夹角
-    q2 = math.atan2(zr, r) - math.atan2(
-        L3 * math.sin(q3), L2 + L3 * math.cos(q3)
-    )
-
-    q4 = 0.2 * math.sin(x * 3.0)
-    q5 = 0.2 * math.cos(y * 3.0)
-    q6 = q1
+    q5 = 0.0
+    q6 = 0.0
     return np.array([q1, q2, q3, q4, q5, q6])
 
 
 def forward_virtual_arm(q, base=None):
-    """2 连杆正运动学，末端位置与逆解输入精确一致。"""
+    """6 自由度正运动学，返回关节点链（6 个点：基座→末端）。"""
     if base is None:
         base = np.zeros(3)
+    q1, q2, q3, q4, *_ = q
 
-    q1, q2, q3, *_ = q
+    def direction(angle):
+        # 竖直平面内 angle 相对竖直方向的单位向量，绕 Z 转 q1
+        return np.array([
+            math.sin(angle) * math.cos(q1),
+            math.sin(angle) * math.sin(q1),
+            math.cos(angle),
+        ])
 
     p0 = np.asarray(base, dtype=float)
-    p1 = p0 + np.array([0, 0, L1])
-    p2 = p1 + np.array([
-        L2 * math.cos(q1) * math.cos(q2),
-        L2 * math.sin(q1) * math.cos(q2),
-        L2 * math.sin(q2),
-    ])
-    p3 = p2 + np.array([
-        L3 * math.cos(q1) * math.cos(q2 + q3),
-        L3 * math.sin(q1) * math.cos(q2 + q3),
-        L3 * math.sin(q2 + q3),
-    ])
+    p1 = p0 + np.array([0.0, 0.0, H0])            # 肩
+    p2 = p1 + L1 * direction(q2)                   # 肘
+    p3 = p2 + L2 * direction(q2 + q3)              # 腕
+    p4 = p3 + L3 * direction(q2 + q3 + q4)         # 腕端/工具根部
+    p5 = p4 + L4 * direction(q2 + q3 + q4)         # 工具末端
 
-    return np.vstack([p0, p1, p2, p3])
+    return np.vstack([p0, p1, p2, p3, p4, p5])

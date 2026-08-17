@@ -1,0 +1,87 @@
+/batch
+/config,noeldb,1     ! force off writing results to database
+*get,_wallstrt,active,,time,wall
+*DIM,_wb_ProjectScratch_dir,string,248
+_wb_ProjectScratch_dir(1) = 'D:\University\竞赛与项目\Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead\ansys\_ProjectScratch\ScrDB1F\'
+*DIM,_wb_SolverFiles_dir,string,248
+_wb_SolverFiles_dir(1) = 'D:\University\竞赛与项目\Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead\ansys\analyse_files\dp0\SYS-1\MECH\'
+*DIM,_wb_userfiles_dir,string,248
+_wb_userfiles_dir(1) = 'D:\University\竞赛与项目\Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead\ansys\analyse_files\user_files\'
+! Executing MAPDL for /post1 evaluation of command objects only
+_wb_post_run = 1
+/post1
+! ****** Begin Command Snippet ******
+!   Commands inserted into this file will be executed immediately after the ANSYS /POST1 command.
+
+!   Active UNIT system in Workbench when this object was created:  Metric (m, kg, N, s, V, A)
+!   NOTE:  Any data that requires units (such as mass) is assumed to be in the consistent solver unit system.
+!                See Solving Units in the help system for more information.
+
+/POST1
+SET,LAST
+
+! 选择所有节点
+ALLSEL,ALL
+
+! 打开输出文件
+*CFOPEN,node_coordinates_s,csv,'D:/University/竞赛与项目/Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead/data'
+
+! 表头
+*VWRITE,'Node,X,Y,Z'
+(A)
+
+! 获取节点总数
+*GET,NCOUNT,NODE,0,COUNT
+
+! 遍历节点
+*DO,I,1,NCOUNT
+
+    ! 获取第 I 个节点编号
+    *GET,NID,NODE,0,NUM,MIN
+
+    ! 获取坐标
+    *GET,XVAL,NODE,NID,LOC,X
+    *GET,YVAL,NODE,NID,LOC,Y
+    *GET,ZVAL,NODE,NID,LOC,Z
+
+    ! 写入 CSV
+    *VWRITE,NID,XVAL,YVAL,ZVAL
+    (F10.0,',',E16.8,',',E16.8,',' ,E16.8)
+
+    ! 删除当前节点选择
+    NSEL,U,NODE,,NID
+
+*ENDDO
+
+*CFCLOS
+
+! 恢复所有节点
+ALLSEL,ALL
+
+
+
+
+
+! ****** End   Command Snippet ******
+xmlo,ENCODING,ISO-8859-1
+xmlo,parm
+/xml,parm,xml
+fini
+/gopr
+*get,_walldone,active,,time,wall
+_totaltim=(_walldone-_wallstrt)*3600
+*get,_dlbratio,active,0,solu,dlbr
+*get,_combtime,active,0,solu,comb
+*get,_ssmode,active,0,solu,ssmm
+*get,_ndofs,active,0,solu,ndof
+*get,_sol_end_time,active,0,set,time
+*if,_sol_end_time,eq,1.000000,then
+/fclean				!clean distributed files
+*endif
+/com,--- Total number of nodes = %_numnode%
+/com,--- Total number of elements = %_numelem%
+/com,--- Element load balance ratio = %_dlbratio%
+/com,--- Time to combine distributed files = %_combtime%
+/com,--- Sparse memory mode = %_ssmode%
+/com,--- Number of DOF = %_ndofs%
+/wb,file,end               ! done with WB generated input

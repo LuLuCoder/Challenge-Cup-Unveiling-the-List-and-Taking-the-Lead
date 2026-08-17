@@ -4,6 +4,13 @@ import sys
 from pathlib import Path
 
 
+import matplotlib  # noqa: E402
+
+# 强制统一 Tk 后端：本机 matplotlib 默认可能是 qtagg（装了 PyQt），
+# 与 Tk 界面混用会导致窗口白屏/黑屏，必须在任何 matplotlib 导入前设置
+matplotlib.use("TkAgg")
+
+
 _ROOT = Path(__file__).resolve().parent
 _PROJECT_ROOT = _ROOT.parent
 
