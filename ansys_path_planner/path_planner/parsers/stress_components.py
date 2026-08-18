@@ -12,10 +12,13 @@ from path_planner.utils.text import read_text_auto
 def _try_fast_parse(path):
     """pandas C 引擎快速路径；失败（格式异常）返回 None 交给旧解析器。"""
     raw = None
-    for kwargs in ({"engine": "c"}, {"delim_whitespace": True, "engine": "c"}):
+    for kwargs in (
+        {"engine": "c", "low_memory": False},
+        {"delim_whitespace": True, "engine": "c", "low_memory": False},
+    ):
         try:
             with warnings.catch_warnings():
-                warnings.simplefilter("ignore", FutureWarning)
+                warnings.simplefilter("ignore")
                 candidate = pd.read_csv(path, header=None, **kwargs)
         except Exception:
             continue

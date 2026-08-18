@@ -86,7 +86,7 @@ def test_no_match_below_threshold(tmp_path, monkeypatch):
     rng = np.random.default_rng(7)
     sphere = rng.normal(size=(2000, 3))
     sphere /= np.linalg.norm(sphere, axis=1, keepdims=True)
-    sphere *= rng.random(2000) ** (1.0 / 3.0)
+    sphere *= (rng.random(2000) ** (1.0 / 3.0))[:, None]
     signature = compute_signature(sphere)
     entry, sim = lib.find_best_template(signature, threshold=0.8)
     assert entry is None

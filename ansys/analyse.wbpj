@@ -2,15 +2,17 @@
 <Storage>
   <Project Version="9.1">
     <base-designpoint-name valType="String">0</base-designpoint-name>
-    <timestamp-max valType="Int64">8307</timestamp-max>
+    <timestamp-max valType="Int64">10311</timestamp-max>
     <framework-build-version valType="String">22.1.217.0</framework-build-version>
     <external-version-string valType="String">2022 R1</external-version-string>
-    <last-saved-utc valType="String">08/16/2026 14:19:11</last-saved-utc>
+    <last-saved-utc valType="String">08/17/2026 10:06:49</last-saved-utc>
     <managed-categories valType="String">[report, misc, progress]</managed-categories>
     <logHistory valType="StringArray">
       <ArrayEntry Index="0">29384@LULU:C:\Users\29384\AppData\Local\Temp\WorkbenchLogs\CoreEvents30732.log</ArrayEntry>
       <ArrayEntry Index="1">29384@LULU:C:\Users\29384\AppData\Local\Temp\WorkbenchLogs\CoreEvents8992.log</ArrayEntry>
       <ArrayEntry Index="2">29384@LULU:C:\Users\29384\AppData\Local\Temp\WorkbenchLogs\CoreEvents31112.log</ArrayEntry>
+      <ArrayEntry Index="3">29384@LULU:C:\Users\29384\AppData\Local\Temp\WorkbenchLogs\CoreEvents30348.log</ArrayEntry>
+      <ArrayEntry Index="4">29384@LULU:C:\Users\29384\AppData\Local\Temp\WorkbenchLogs\CoreEvents5272.log</ArrayEntry>
     </logHistory>
     <expression-scope-container valType="String">Parameters</expression-scope-container>
     <project-type valType="String">WB2</project-type>
@@ -20,7 +22,6 @@
         <ReferenceList valType="String">{
 "20b14ca8-f2ad-4714-8b5a-96e0070ae3cc": "/FileContainer/FileReference:F2",
 "b58cf456-a5c7-4240-8d11-e22b3e990281": "/FileContainer/FileReference:F7",
-"a0c957b7-7e21-4fbd-a985-f46e86c21030": "/FileContainer/FileReference:F1",
 "d5c711aa-fe4a-4eda-81fc-ac56b4ec9762": "/FileContainer/FileReference:F4",
 "ae1eefcf-5666-4d42-92e6-465cd9fca3aa": "/FileContainer/FileReference:F3",
 "1973e4a8-06bc-4756-9602-556d4dc17565": "/FileTypesContainer/FileType:GeometryFileType",
@@ -48,7 +49,8 @@
 "08cb905a-3661-4c70-8b4f-7a69ada583fd": "/Schematic/ComponentTemplate:SimulationModelCellTemplate",
 "cb3cf225-dd78-4f5c-b439-2d04241a4854": "/Schematic/ComponentTemplate:SimulationSetupCellTemplate_StructuralStaticANSYS",
 "87782c27-580f-4750-97bf-3a47ea628982": "/Schematic/ComponentTemplate:SimulationSolutionCellTemplate_StructuralStaticANSYS",
-"ed817018-7128-49f0-aeb4-4b49f3480199": "/Schematic/ComponentTemplate:SimulationResultsCellTemplate_StructuralStaticANSYS"
+"ed817018-7128-49f0-aeb4-4b49f3480199": "/Schematic/ComponentTemplate:SimulationResultsCellTemplate_StructuralStaticANSYS",
+"bd7166bd-cef6-4f85-8e9d-8829a12ce2fc": "/FileContainer/FileReference:F8"
 }</ReferenceList>
       </ProjectReferenceList>
       <DesignPointReferenceListCollection>
@@ -168,13 +170,13 @@
       <storage-scheme-id valType="String">version-1-format</storage-scheme-id>
       <deleted-sources valType="String">[]</deleted-sources>
       <last-updated valType="Int64">0</last-updated>
-      <last-modified-by-usage valType="String">{"Extrinsic": 7909, "Input": 1470, "Output": 1470}</last-modified-by-usage>
+      <last-modified-by-usage valType="String">{"Extrinsic": 10231, "Input": 1470, "Output": 1470}</last-modified-by-usage>
       <outputs-generated-by-type valType="String">{}</outputs-generated-by-type>
       <contains-significant-data valType="Boolean">false</contains-significant-data>
-      <Object Name="/FileContainer/FileReference:F1" Version="1.0">
+      <Object Name="/FileContainer/FileReference:F8" Version="1.0">
         <class-type valType="String">FileReference</class-type>
-        <object-name valType="String">F1</object-name>
-        <member-data valType="String">{"DisplayText": "零件1.STEP", "FileType": $$1973e4a8-06bc-4756-9602-556d4dc17565, "DependentFiles": [], "ContainerAssociations": ["Geometry"], "SkipForDesignPointDuplication": False, "IsDeletable": True, "ExternalSource": None, "LastDownloadFromRepository": -1, "Location": r"C:\Users\29384\Desktop\零件1.STEP", "ReferenceCount": 1}</member-data>
+        <object-name valType="String">F8</object-name>
+        <member-data valType="String">{"DisplayText": "零件1.STEP", "FileType": $$1973e4a8-06bc-4756-9602-556d4dc17565, "DependentFiles": [], "ContainerAssociations": ["Geometry"], "SkipForDesignPointDuplication": False, "IsDeletable": True, "ExternalSource": None, "LastDownloadFromRepository": -1, "Location": r"D:\University\竞赛与项目\Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead\ansys\零件1.STEP", "ReferenceCount": 1}</member-data>
       </Object>
       <Object Name="/FileContainer/FileReference:F2" Version="1.0">
         <class-type valType="String">FileReference</class-type>
@@ -199,7 +201,7 @@
       <Object Name="/FileContainer/FileReference:F6" Version="1.0">
         <class-type valType="String">FileReference</class-type>
         <object-name valType="String">F6</object-name>
-        <member-data valType="String">{"DisplayText": "act.dat", "FileType": $$7e25d7c5-4977-43d2-a015-918a92a209df, "DependentFiles": [], "ContainerAssociations": [], "SkipForDesignPointDuplication": False, "IsDeletable": True, "ExternalSource": None, "LastDownloadFromRepository": -1, "Location": r"$(ProjectName)_files\dp0\act.dat", "ReferenceCount": 3}</member-data>
+        <member-data valType="String">{"DisplayText": "act.dat", "FileType": $$7e25d7c5-4977-43d2-a015-918a92a209df, "DependentFiles": [], "ContainerAssociations": [], "SkipForDesignPointDuplication": False, "IsDeletable": True, "ExternalSource": None, "LastDownloadFromRepository": -1, "Location": r"$(ProjectName)_files\dp0\act.dat", "ReferenceCount": 5}</member-data>
       </Object>
       <Object Name="/FileContainer/FileReference:F7" Version="1.0">
         <class-type valType="String">FileReference</class-type>
@@ -212,9 +214,24 @@
       <storage-scheme-id valType="String">version-1-format</storage-scheme-id>
       <deleted-sources valType="String">[]</deleted-sources>
       <last-updated valType="Int64">0</last-updated>
-      <last-modified-by-usage valType="String">{"Extrinsic": 1471, "Input": 1471, "Output": 1471}</last-modified-by-usage>
+      <last-modified-by-usage valType="String">{"Extrinsic": 8617, "Input": 1471, "Output": 1471}</last-modified-by-usage>
       <outputs-generated-by-type valType="String">{}</outputs-generated-by-type>
       <contains-significant-data valType="Boolean">false</contains-significant-data>
+      <Object Name="/Messages/StoredMessage:Message" Version="1.0">
+        <class-type valType="String">StoredMessage</class-type>
+        <object-name valType="String">Message</object-name>
+        <member-data valType="String">{"DisplayText": "Message", "MessageType": "Error", "MessageCategory": "None", "Summary": r"C:\Users\29384\Desktop\零件1.STEP  does not exist any more. The file might have been renamed, moved or deleted. You can use the Files View to specify the correct file location.", "Details": None, "Association": "", "DateTimeStamp": 08/17/2026 14:18:03, "Visibility": "Error", "MessageSourceContainer": None, "MessageSourceEntity": None, "AdditionalMessageData": None, "DesignPoint": None}</member-data>
+      </Object>
+      <Object Name="/Messages/StoredMessage:Message 1" Version="1.0">
+        <class-type valType="String">StoredMessage</class-type>
+        <object-name valType="String">Message 1</object-name>
+        <member-data valType="String">{"DisplayText": "Message", "MessageType": "Information", "MessageCategory": "None", "Summary": "The Model component in 模板建立 requires user input before it can be updated. For instructions on how to address the cell in its current state, click the blue triangle in the lower right corner of the cell in the Project Schematic.", "Details": None, "Association": "", "DateTimeStamp": 08/17/2026 14:20:08, "Visibility": "Information", "MessageSourceContainer": None, "MessageSourceEntity": None, "AdditionalMessageData": None, "DesignPoint": "0"}</member-data>
+      </Object>
+      <Object Name="/Messages/StoredMessage:Message 2" Version="1.0">
+        <class-type valType="String">StoredMessage</class-type>
+        <object-name valType="String">Message 2</object-name>
+        <member-data valType="String">{"DisplayText": "Message", "MessageType": "Information", "MessageCategory": "None", "Summary": "The Model component in 模板建立 requires user input before it can be updated. For instructions on how to address the cell in its current state, click the blue triangle in the lower right corner of the cell in the Project Schematic.", "Details": None, "Association": "", "DateTimeStamp": 08/17/2026 14:20:28, "Visibility": "Information", "MessageSourceContainer": None, "MessageSourceEntity": None, "AdditionalMessageData": None, "DesignPoint": "0"}</member-data>
+      </Object>
     </Container>
     <Container Name="Parameters" Version="1.0">
       <container-type valType="String">Ansys.ParameterManager.ParameterManagerAddin:parameters</container-type>
@@ -223,13 +240,14 @@
       <maxUpdateOrder valType="Double">1</maxUpdateOrder>
       <deleted-sources valType="String">[]</deleted-sources>
       <last-updated valType="Int64">0</last-updated>
-      <last-modified-by-usage valType="String">{"Extrinsic": 7903, "Input": 7904, "Output": 1474}</last-modified-by-usage>
+      <last-modified-by-usage valType="String">{"Extrinsic": 10310, "Input": 10311, "Output": 1474}</last-modified-by-usage>
       <outputs-generated-by-type valType="String">{}</outputs-generated-by-type>
-      <contains-significant-data valType="Boolean">false</contains-significant-data>
+      <contains-significant-data valType="Boolean">true</contains-significant-data>
       <Object Name="/Parameters/DesignPoint:0" Version="1.0">
         <class-type valType="String">DesignPoint</class-type>
         <object-name valType="String">0</object-name>
-        <member-data valType="String">{"DisplayText": "DP 0", "JustDuplicated": False, "PartiallyRetainedData": [], "ValidRetainedData": [], "ErrorsOnLastUpdate": {}, "LastUpdateInformation": {}, "Parameters": {}, "ParameterErrors": {}, "CurrentValues": {}, "ParameterStatus": {}, "Note": None, "IsUpToDate": True, "Exported": True, "Retained": True, "CurrentStateExported": False, "IsDataModelValid": True, "HasRetainedData": True, "HasBeenSolved": True, "UpdateOrder": 1}</member-data>
+        <member-data valType="String">{"DisplayText": "DP 0", "JustDuplicated": False, "PartiallyRetainedData": [], "ValidRetainedData": [], "ErrorsOnLastUpdate": {}, "LastUpdateInformation": {"DidUpdate": "True", "DidPreRsmUpdate": "False"}, "Parameters": {}, "ParameterErrors": {}, "CurrentValues": {}, "ParameterStatus": {}, "Note": None, "IsUpToDate": True, "Exported": True, "Retained": True, "CurrentStateExported": False, "IsDataModelValid": True, "HasRetainedData": True, "HasBeenSolved": True, "UpdateOrder": 1}</member-data>
+        <properties-setByUserFlag-data valType="String">["IsDataModelValid"]</properties-setByUserFlag-data>
       </Object>
       <Object Name="/Parameters/DesignPointReportSetting:Design Points Report Setting" Version="1.0">
         <class-type valType="String">DesignPointReportSetting</class-type>
@@ -244,13 +262,14 @@
       <storage-scheme-id valType="String">version-1-format</storage-scheme-id>
       <deleted-sources valType="String">[]</deleted-sources>
       <last-updated valType="Int64">0</last-updated>
-      <last-modified-by-usage valType="String">{"Extrinsic": 7784, "Input": 7776, "Output": 1477}</last-modified-by-usage>
+      <last-modified-by-usage valType="String">{"Extrinsic": 10242, "Input": 9950, "Output": 1477}</last-modified-by-usage>
       <outputs-generated-by-type valType="String">{}</outputs-generated-by-type>
-      <contains-significant-data valType="Boolean">false</contains-significant-data>
+      <contains-significant-data valType="Boolean">true</contains-significant-data>
       <Object Name="/Schematic/System:SYS" Version="1.0">
         <class-type valType="String">System</class-type>
         <object-name valType="String">SYS</object-name>
-        <member-data valType="String">{"DisplayText": "Static Structural", "Components": [$$5906c7e0-7dc2-4aaa-b529-7f8d434f780d, $$f4c094be-abe2-4321-a903-f8d4757ff407, $$e74c5b4d-23f8-4035-a2e1-42d63c3e24b7, $$dfbd06aa-0d0e-4454-8c7d-2dc3e6ae4362, $$d26bc2e1-5b7d-4d7b-9e15-0acf5c4a4772, $$b1878a58-bd9a-4459-8a68-517b2e86071e], "ComponentGroups": [], "SystemVisible": True, "RequiredComponents": [$$e74c5b4d-23f8-4035-a2e1-42d63c3e24b7, $$dfbd06aa-0d0e-4454-8c7d-2dc3e6ae4362], "ExcludedComponentTemplates": [], "Attributes": {"PhysicsType": "Structural", "AnalysisType": "Static", "SolverType": "ANSYS", "SolverTypeDisplayString": "Mechanical APDL", "PhysicsTypeDisplayString": "Structural", "AnalysisTypeDisplayString": "Static Structural", "SystemName": "Static Structural (ANSYS)", "IsCreated": "True", "AlreadyInSystem": "Yes", "VOLATILE:SystemName": "SYS"}, "SystemType": "Static Structural (ANSYS)", "HeaderText": "Static Structural", "SystemTypeAbbreviation": "SYS", "UniqueSystemDirectoryName": "SYS", "Physics": [], "AnalysisType": None, "SystemHelpId": "wb2sb_ststructAN", "AdditionalSystemHelpId": None, "IsParametric": False, "CreatedFromTemplate": $$765f16db-1639-4832-9f30-06f1407aa8be, "Notes": None, "LayoutChildren": [], "LayoutIndex": 1}</member-data>
+        <member-data valType="String">{"DisplayText": "模板建立", "Components": [$$5906c7e0-7dc2-4aaa-b529-7f8d434f780d, $$f4c094be-abe2-4321-a903-f8d4757ff407, $$e74c5b4d-23f8-4035-a2e1-42d63c3e24b7, $$dfbd06aa-0d0e-4454-8c7d-2dc3e6ae4362, $$d26bc2e1-5b7d-4d7b-9e15-0acf5c4a4772, $$b1878a58-bd9a-4459-8a68-517b2e86071e], "ComponentGroups": [], "SystemVisible": True, "RequiredComponents": [$$e74c5b4d-23f8-4035-a2e1-42d63c3e24b7, $$dfbd06aa-0d0e-4454-8c7d-2dc3e6ae4362], "ExcludedComponentTemplates": [], "Attributes": {"PhysicsType": "Structural", "AnalysisType": "Static", "SolverType": "ANSYS", "SolverTypeDisplayString": "Mechanical APDL", "PhysicsTypeDisplayString": "Structural", "AnalysisTypeDisplayString": "Static Structural", "SystemName": "Static Structural (ANSYS)", "IsCreated": "True", "AlreadyInSystem": "Yes", "VOLATILE:SystemName": "SYS"}, "SystemType": "Static Structural (ANSYS)", "HeaderText": "Static Structural", "SystemTypeAbbreviation": "SYS", "UniqueSystemDirectoryName": "SYS", "Physics": [], "AnalysisType": None, "SystemHelpId": "wb2sb_ststructAN", "AdditionalSystemHelpId": None, "IsParametric": False, "CreatedFromTemplate": $$765f16db-1639-4832-9f30-06f1407aa8be, "Notes": None, "LayoutChildren": [], "LayoutIndex": 1}</member-data>
+        <properties-setByUserFlag-data valType="String">["DisplayText"]</properties-setByUserFlag-data>
       </Object>
       <Object Name="/Schematic/SchematicSettings:Schematic Settings" Version="1.0">
         <class-type valType="String">SchematicSettings</class-type>
@@ -354,7 +373,7 @@
       <storage-scheme-id valType="String">version-1-format</storage-scheme-id>
       <deleted-sources valType="String">[]</deleted-sources>
       <last-updated valType="Int64">0</last-updated>
-      <last-modified-by-usage valType="String">{"Extrinsic": 8306, "Input": 1805, "Output": 1805}</last-modified-by-usage>
+      <last-modified-by-usage valType="String">{"Extrinsic": 10148, "Input": 1805, "Output": 1805}</last-modified-by-usage>
       <outputs-generated-by-type valType="String">{}</outputs-generated-by-type>
       <contains-significant-data valType="Boolean">false</contains-significant-data>
     </Container>

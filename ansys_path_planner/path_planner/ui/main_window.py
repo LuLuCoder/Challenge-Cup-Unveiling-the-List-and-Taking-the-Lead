@@ -24,6 +24,8 @@ from path_planner.analysis.template_library import (
 )
 from path_planner.parsers.auto_classify import classify_ansys_files
 from path_planner.parsers.coordinates import parse_coordinate_file
+from path_planner.parsers.step_mesh import mesh_step_file
+from path_planner.ui.step_inspect_window import show_step_inspection
 from path_planner.visualization.plots import attach_colorbar, plot_density_path
 from path_planner.visualization.virtual_arm import (
     forward_virtual_arm,
@@ -60,8 +62,32 @@ class ANSYSPathPlannerApp:
         self.result_queue = queue.Queue()
         self._task_hook = None  # 统一平台注入的忙碌状态回调（可选）
         self._last_real_data = None  # 最近一次真实仿真融合数据（供存模板）
+        self._last_step_mesh = None  # 最近一次 STEP 网格结果（供检查窗口）
+        self._last_step_entry = None  # 最近一次 STEP 命中的模板条目
 
         self.setup_ui()
+        self._check_gmsh()
+
+    def _check_gmsh(self):
+        """启动自检：提示当前 Python 环境是否具备 STEP 网格化能力。"""
+        try:
+            import gmsh  # noqa: F401
+
+            gmsh_ok = True
+        except Exception:
+            gmsh_ok = False
+        if gmsh_ok:
+            self.status_var.set(
+                "就绪：已启用 gmsh 网格化，STEP 文件可直接导入。"
+            )
+        else:
+            self.status_var.set(
+                "警告：当前 Python 环境未安装 gmsh，STEP 导入将无法网格化；"
+                "请用 pytorch 环境启动或执行 pip install gmsh"
+            )
+
+    def _on_real_import(self, merged, skipped):
+        """真实仿真数据导入完成后的扩展钩子（子类可覆写）。"""
 
     def set_task_hook(self, callback):
         """供统一平台注入忙碌状态回调：callback(app, busy)。"""
@@ -106,6 +132,11 @@ class ANSYSPathPlannerApp:
             command=self.import_and_merge,
         )
         self.import_button.grid(row=0, column=3, padx=15)
+        self.inspect_button = ttk.Button(
+            file_frame, text="STEP 检查",
+            command=self._open_step_inspection, state="disabled",
+        )
+        self.inspect_button.grid(row=0, column=4, padx=5)
 
         ttk.Label(file_frame, text="相似度阈值：").grid(
             row=1, column=0, padx=8, pady=8
@@ -146,6 +177,14 @@ class ANSYSPathPlannerApp:
             ),
             foreground="#666666",
         ).grid(row=3, column=1, sticky="w", padx=5, pady=(0, 7))
+        ttk.Label(
+            file_frame,
+            text=(
+                "也可直接导入 STEP(.step/.stp) 文件：自动转换为点云"
+                "并与模板库对比，无需 ANSYS 导出 CSV"
+            ),
+            foreground="#2C7FB8",
+        ).grid(row=4, column=1, sticky="w", padx=5, pady=(0, 7))
 
     def _build_param_section(self):
         param_frame = ttk.LabelFrame(self.root, text="② 路径规划参数")
@@ -347,6 +386,7 @@ class ANSYSPathPlannerApp:
             ),
             filetypes=[
                 ("CSV/TXT", "*.csv *.txt"),
+                ("STEP", "*.step *.stp"),
                 ("CSV", "*.csv"),
                 ("TXT", "*.txt"),
                 ("All files", "*.*"),
@@ -381,44 +421,73 @@ class ANSYSPathPlannerApp:
 
         def worker():
             try:
-                node_path, stress_files, skipped = classify_ansys_files(
-                    paths, require_stress=False
-                )
-                if len(stress_files) == len(config.STRESS_COMPONENTS):
-                    merged = merge_ansys_files_data(node_path, stress_files)
-                    self.result_queue.put(("real", merged, skipped, None))
-                else:
-                    node_df = parse_coordinate_file(node_path)
-                    signature = compute_signature(
-                        node_df[["X", "Y", "Z"]].to_numpy(float)
+                step_paths = [
+                    p for p in paths
+                    if str(p).lower().endswith((".step", ".stp"))
+                ]
+                if step_paths:
+                    # STEP 直接导入：gmsh 四面体网格 -> 节点点云 -> 与模板对比 -> 映射
+                    mesh = mesh_step_file(
+                        step_paths[0],
+                        progress_cb=lambda m: self.result_queue.put(
+                            ("step_progress", m)
+                        ),
                     )
-                    entry, sim = find_best_template(signature, threshold)
-                    if entry is None:
-                        self.result_queue.put(
-                            ("no_match", None, None, (sim, threshold, skipped))
-                        )
+                    self.result_queue.put(("step", mesh, threshold))
+                else:
+                    node_path, stress_files, skipped = classify_ansys_files(
+                        paths, require_stress=False
+                    )
+                    if len(stress_files) == len(config.STRESS_COMPONENTS):
+                        merged = merge_ansys_files_data(node_path, stress_files)
+                        self.result_queue.put(("real", merged, skipped, None))
                     else:
-                        mapped_geom, _ = map_from_template(
-                            entry["path"], node_df
-                        )
-                        n_layers = int(
-                            entry.get("n_layers") or config.DEFAULT_LAYERS
-                        )
-                        path_data, _ = generate_layer_path(
-                            mapped_geom,
-                            "Maximum_Principal",
-                            percentile=config.DEFAULT_PERCENTILE,
-                            n_layers=n_layers,
-                        )
-                        self.result_queue.put(
-                            ("mapped", mapped_geom, path_data,
-                             (entry, sim, skipped))
-                        )
-            except Exception as e:
-                self.result_queue.put(("error", repr(e)))
+                        node_df = parse_coordinate_file(node_path)
+                        self._queue_template_mapping(node_df, skipped, threshold)
+            except Exception as exc:
+                self.result_queue.put(("error", repr(exc)))
 
         threading.Thread(target=worker, daemon=True).start()
         self.root.after(100, self._poll_import)
+
+    def _queue_template_mapping(self, node_df, skipped, threshold,
+                                entry=None, sim=None):
+        """后台线程内执行模板检索与映射，结果放入队列。
+
+        entry/sim 可预传入（STEP 流程已先检索以便展示检查窗口），
+        否则在此自动检索。
+        """
+        def worker():
+            try:
+                signature = compute_signature(
+                    node_df[["X", "Y", "Z"]].to_numpy(float)
+                )
+                e, s = entry, sim
+                if e is None or s is None:
+                    # threshold=0 使 find_best_template 始终返回最相似模板
+                    e, s = find_best_template(signature, threshold=0.0)
+                if e is None or s < threshold:
+                    self.result_queue.put(
+                        ("no_match", node_df, s, threshold, skipped)
+                    )
+                    return
+                mapped_geom, _ = map_from_template(e["path"], node_df)
+                n_layers = int(
+                    e.get("n_layers") or config.DEFAULT_LAYERS
+                )
+                path_data, _ = generate_layer_path(
+                    mapped_geom,
+                    "Maximum_Principal",
+                    percentile=config.DEFAULT_PERCENTILE,
+                    n_layers=n_layers,
+                )
+                self.result_queue.put(
+                    ("mapped", mapped_geom, path_data, (e, s, skipped))
+                )
+            except Exception as exc:
+                self.result_queue.put(("error", repr(exc)))
+
+        threading.Thread(target=worker, daemon=True).start()
 
     def _poll_import(self):
         """主线程轮询导入结果，成功后再更新数据与绘图。"""
@@ -435,15 +504,88 @@ class ANSYSPathPlannerApp:
             messagebox.showerror("导入失败", payload[0])
             self.status_var.set("导入失败")
             return
+        if status == "step_progress":
+            self.status_var.set(payload[0])
+            self.root.after(100, self._poll_import)
+            return
+        if status == "step":
+            mesh, threshold = payload
+            if not mesh["ok"]:
+                self._set_busy(False)
+                reason = mesh.get("error") or "未知原因"
+                messagebox.showerror(
+                    "STEP 网格化失败",
+                    "无法用 gmsh 对 STEP 文件划分四面体网格，已停止导入"
+                    "（避免使用不准确的点云）。\n\n"
+                    f"原因：{reason}\n\n"
+                    "请确认：\n"
+                    "1. 使用已安装 gmsh 的 Python 环境启动本软件\n"
+                    "   （pytorch 环境：C:\\Users\\29384\\.conda\\envs\\"
+                    "pytorch\\python.exe）；\n"
+                    "2. 若缺失，执行：pip install gmsh",
+                )
+                self.status_var.set("STEP 网格化失败（gmsh 不可用）")
+                return
+            self._set_busy(
+                True, "网格划分完成，正在与模板库比对（后台执行）…"
+            )
+            node_df = mesh["node_df"]
+
+            def match_worker():
+                try:
+                    signature = compute_signature(mesh["points"])
+                    entry, sim = find_best_template(
+                        signature, threshold=0.0
+                    )
+                    self.result_queue.put(
+                        ("step_ready", mesh, node_df, entry, sim, threshold)
+                    )
+                except Exception as e:
+                    self.result_queue.put(("error", repr(e)))
+
+            threading.Thread(target=match_worker, daemon=True).start()
+            self.root.after(100, self._poll_import)
+            return
+        if status == "step_ready":
+            mesh, node_df, entry, sim, threshold = payload
+            self._set_busy(False)
+            self._last_step_mesh = mesh
+            self._last_step_entry = entry
+            if hasattr(self, "inspect_button"):
+                self.inspect_button.configure(state="normal")
+            # 检查窗口：模板 / 线框 / 四面体网格 / 点云 + 质量报告
+            try:
+                show_step_inspection(self.root, mesh, entry)
+            except Exception as exc:  # noqa: BLE001 - 展示失败不应阻断路径映射
+                messagebox.showwarning(
+                    "检查窗口显示失败", str(exc)
+                )
+            self._set_busy(True, "模板比对完成，正在映射应力场与路径…")
+            self._queue_template_mapping(
+                node_df, [], threshold, entry=entry, sim=sim
+            )
+            self.root.after(100, self._poll_import)
+            return
+
         if status == "no_match":
-            sim, threshold, _skipped = payload
-            messagebox.showerror(
+            node_df, sim, threshold, _skipped = payload
+            # 未命中模板也显示零件点云（例如来自 STEP 的几何）
+            self.data = node_df
+            self.path_data = None
+            self.result_name = "Maximum_Principal"
+            self._last_real_data = None
+            self.status_var.set(
+                f"未命中模板：最高相似度 {sim:.3f} < 阈值 {threshold:.2f}；"
+                "已显示零件点云。请先建立匹配模板或调低相似度阈值。"
+            )
+            self.plot_geometry()
+            messagebox.showinfo(
                 "未命中模板",
                 f"模板库中最高相似度 = {sim:.3f}，低于阈值 {threshold:.2f}。\n\n"
-                "请提供该零件的 ANSYS 六应力分量文件进行真实仿真，"
-                "或调低相似度阈值后重试。",
+                "已显示该零件的点云（来自 STEP/节点文件）。\n"
+                "可选：调低相似度阈值后重试；或先导入真实仿真数据"
+                "建立与该零件匹配的模板。",
             )
-            self.status_var.set("未命中模板")
             return
         if status == "real":
             merged, skipped, _ = payload
@@ -463,6 +605,7 @@ class ANSYSPathPlannerApp:
             )
             self.plot_geometry()
             self.plot_simulation()
+            self._on_real_import(merged, skipped)
             return
         if status == "mapped":
             mapped_geom, path_data, (entry, sim, skipped) = payload
@@ -485,6 +628,20 @@ class ANSYSPathPlannerApp:
             self.plot_path()
             self.update_table()
             return
+
+    def _open_step_inspection(self):
+        """重新打开最近一次 STEP 的网格检查窗口（想看就看）。"""
+        if self._last_step_mesh is None:
+            messagebox.showinfo(
+                "提示", "请先导入 STEP 文件并完成网格化。"
+            )
+            return
+        try:
+            show_step_inspection(
+                self.root, self._last_step_mesh, self._last_step_entry
+            )
+        except Exception as exc:  # noqa: BLE001
+            messagebox.showwarning("检查窗口显示失败", str(exc))
 
     # --------------------------------------------------------
     # 模板库管理
@@ -534,15 +691,16 @@ class ANSYSPathPlannerApp:
         win.geometry("680x360")
         tree = ttk.Treeview(
             win,
-            columns=("name", "nodes", "path", "time"),
+            columns=("name", "nodes", "size", "path", "time"),
             show="headings",
             height=12,
         )
         for col, text, width in (
-            ("name", "名称", 220),
+            ("name", "名称", 180),
             ("nodes", "节点数", 90),
+            ("size", "尺寸X×Y×Z(mm)", 160),
             ("path", "路径点数", 90),
-            ("time", "创建时间", 170),
+            ("time", "创建时间", 150),
         ):
             tree.heading(col, text=text)
             tree.column(col, width=width)
@@ -556,6 +714,7 @@ class ANSYSPathPlannerApp:
                 values=(
                     e["name"],
                     e["node_count"],
+                    " × ".join(str(v) for v in e["size_mm"]),
                     e["path_points"],
                     e["created_at"],
                 ),

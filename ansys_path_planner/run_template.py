@@ -1,8 +1,9 @@
 """相似零件模板映射入口（推荐）：python run_template.py
 
-在 config.py 尚未补充模板库常量时，本入口负责：
-1. 注入模板库相关配置常量（带默认值，后续 config 扩展后自动沿用）；
-2. 修正真实仿真分支的高优先级分位数（使用默认分位数而非相似度阈值）。
+模板映射窗口已与路径规划主窗口共用同一套四画布 + 后台线程架构：
+真实仿真数据导入后自动规划路径；仅导入节点坐标/STEP 时自动查库映射。
+本入口负责在 config.py 尚未补充模板库常量时注入默认值（后续 config
+扩展后自动沿用），随后启动模板映射窗口。
 """
 
 import tkinter as tk
@@ -10,7 +11,7 @@ import tkinter as tk
 from path_planner import config
 
 
-# 1) 注入模板库配置常量（若 config 已扩展则保留原值）
+# 注入模板库配置常量（若 config 已扩展则保留原值）
 _DEFAULTS = {
     "DEFAULT_SIMILARITY_THRESHOLD": 0.80,
     "SIMILARITY_MIN": 0.50,
@@ -26,30 +27,7 @@ for _key, _value in _DEFAULTS.items():
         setattr(config, _key, _value)
 
 
-# 2) 修正真实仿真分支的分位数（覆盖原方法中的笔误）
-def _fixed_process_real(self, node_path, stress_files):
-    from path_planner.analysis.path_planning import generate_layer_path
-    from path_planner.analysis.stress import merge_ansys_files_data
-
-    merged = merge_ansys_files_data(node_path, stress_files)
-    path_data, _threshold = generate_layer_path(
-        merged,
-        "Maximum_Principal",
-        percentile=config.DEFAULT_PERCENTILE,
-        n_layers=int(config.DEFAULT_LAYERS),
-    )
-    self.data = merged
-    self.path_data = path_data
-    self._last_real_data = merged.copy()
-    self.status_var.set(
-        f"真实仿真数据：{len(merged)} 个节点，已规划 "
-        f"{len(path_data)} 个路径点。可点击「存入模板库」建立模板。"
-    )
-
-
 from path_planner.ui.template_window import TemplateApp  # noqa: E402
-
-TemplateApp._process_real = _fixed_process_real
 
 
 def main():

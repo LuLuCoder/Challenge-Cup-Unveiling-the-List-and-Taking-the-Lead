@@ -85,6 +85,7 @@ def save_template(geometry_df, path_df, name, description=""):
 
     path_df.to_csv(folder / "path.csv", index=False, encoding="utf-8-sig")
 
+    size_mm = np.ptp(geometry_df[["X", "Y", "Z"]].to_numpy(float), axis=0)
     n_layers = (
         int(path_df["Layer"].max())
         if "Layer" in path_df.columns and len(path_df)
@@ -97,6 +98,7 @@ def save_template(geometry_df, path_df, name, description=""):
         "node_count": int(len(geometry_df)),
         "path_points": int(len(path_df)),
         "n_layers": n_layers,
+        "size_mm": [round(float(v), 3) for v in size_mm],
         "signature": {
             "node_count": signature["node_count"],
             "blocks": signature["blocks"],
@@ -134,6 +136,7 @@ def list_templates():
             "node_count": meta.get("node_count", 0),
             "path_points": meta.get("path_points", 0),
             "n_layers": meta.get("n_layers", 0),
+            "size_mm": meta.get("size_mm", [0.0, 0.0, 0.0]),
         })
     return entries
 
@@ -157,8 +160,34 @@ def find_best_template(signature, threshold=None):
             meta = _load_meta(entry["path"])
         except Exception:
             continue
+        signature_meta = meta.get("signature") or {}
+        if not signature_meta.get("invariant_blocks"):
+            # 旧格式模板：用 geometry.csv 重建新签名（自动升级）
+            try:
+                geom = pd.read_csv(
+                    entry["path"] / "geometry.csv", encoding="utf-8-sig"
+                )
+                if np.ptp(geom[["X", "Y", "Z"]].to_numpy(float),
+                          axis=0).max() < 1e-9:
+                    continue  # 退化模板（点云几乎为一点）
+                signature_meta = compute_signature(
+                    geom[["X", "Y", "Z"]].to_numpy(float),
+                    axis_bins=AXIS_BINS,
+                    radial_bins=RADIAL_BINS,
+                )
+                meta["signature"] = signature_meta
+            except Exception:
+                continue
+            try:
+                # 写回（文件只读等失败时忽略：本次会话仍使用内存中的新签名）
+                (entry["path"] / "template.json").write_text(
+                    json.dumps(meta, ensure_ascii=False, indent=2),
+                    encoding="utf-8",
+                )
+            except Exception:
+                pass
         try:
-            sim = signature_similarity(signature, meta["signature"])
+            sim = signature_similarity(signature, signature_meta)
         except Exception:
             continue  # 跳过签名格式不兼容（如旧版本模板）
         if sim > best_sim:
