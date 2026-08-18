@@ -202,6 +202,7 @@ Challenge-Cup-Unveiling-the-List-and-Taking-the-Lead/
 ├── README.md                     # 本文件（系统总览）
 ├── 第五章--算法（实际实现版）.md  # 第五章算法章节（按仓库实际实现撰写）
 ├── 第五章--算法（最终版）.docx    # 第五章算法 Word 版（三线表 + 原生公式）
+├── figures/                      # 第五章配图自动生成代码与 300dpi 输出
 ├── ansys/                        # ANSYS Workbench 仿真工程（analyse.wbpj）
 ├── data/                         # 示例 ANSYS 数据（节点坐标 + 六应力分量）
 ├── ansys_path_planner/           # ① 路径规划
